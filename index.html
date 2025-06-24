@@ -27,10 +27,10 @@
         <button class="nextQuestionBtn bg-gray-700 hover:bg-gray-600 px-10 py-2 rounded-xl text-white">Next</button>
       </div>
     </div>
-    <div class="resultDiv hidden flex flex-col justify-center items-center max-w-2xl mx-auto">
+    <div class="resultDiv px-2 hidden flex flex-col justify-center items-center max-w-2xl mx-auto">
       <div class="mt-5 text-xl underline font-semibold">Result</div>
-      <div class="mt-5">Right Ans : <span class="totalRight"></span></div>
-      <div class="">Wrong Ans : <span class="totalWrong"></span></div>
+      <div class="mt-5">Right Ans : <span class="totalRight text-green-500"></span></div>
+      <div class="">Wrong Ans : <span class="totalWrong text-red-500"></span></div>
       --------------------------------------------------------------
       <div class="showResult"></div>
       <button class="restartGameBtn mt-5 mb-10 bg-gray-700 hover:bg-gray-600 px-10 py-2 rounded-xl text-white">Reset Game</button>
@@ -178,17 +178,17 @@ function showResult(){
     gameArea.style.display = "none";
     totalRight.innerHTML = summary_head.correct;
     totalWrong.innerHTML = summary_head.inccorect;
-    let clutter = `<div class="mt-5 text-lg underline font-semibold">Did Right</div>`
+    let clutter = `<div class="mt-5 text-xl underline font-semibold">Did Right</div>`
     RESULT.did_correct.forEach(elem => {
-      clutter += `<div class="ques mt-4">Q: ${elem.current_question}</div>
-                 <p>Selected & Correct Option: ${elem.selected_option} </p>`
+      clutter += `<div class="ques mt-4 font-semibold">Q: ${elem.current_question}</div>
+                 <p >Selected & Correct Option: <span class="text-green-500" >${elem.selected_option}</span> </p>`
     })
     clutter += `------------------------------------------------------------------`
-    clutter += `<div class="mt-10 text-lg underline font-semibold">Did Wrong</div>`
+    clutter += `<div class="mt-10 text-xl underline font-semibold">Did Wrong</div>`
     RESULT.did_inccorrect.forEach(elem => {
-      clutter += `<div class="ques mt-2">Q:${elem.current_question}</div>
-                 <p>Selected Option: ${elem.selected_option} </p>
-                 <p>Correct Option: ${elem.correct_option} </p>`
+      clutter += `<div class="ques mt-4 font-semibold">Q:${elem.current_question}</div>
+                 <p >Selected Option: <span class="text-red-500" >${elem.selected_option}</span> </p>
+                 <p >Correct Option: <span class="text-green-500" >${elem.correct_option} </span> </p>`
     })
     clutter += `------------------------------------------------------------------`
     showResultDiv.innerHTML = clutter
