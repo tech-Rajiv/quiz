@@ -9,208 +9,191 @@
   <body>
     <h1 class="text-center text-3xl font-bold underline mt-5">Quiz Verse!</h1>
     <div class="startBtnArea text-center mt-10">
-      <button
-        class="startGameBtn bg-gray-700 hover:bg-gray-600 px-10 py-2 rounded-xl text-white"
-      >
-        Start Game
-      </button>
+      <button class="startGameBtn bg-gray-700 hover:bg-gray-600 px-10 py-2 rounded-xl text-white">Start Game </button>
     </div>
-
-    <div
-      class="gameArea hidden mx-2 mt-10 p-4 sm:mx-auto sm:p-10 max-w-3xl flex flex-col min-h-96 border rounded-xl"
-    >
-      <div
-        class="countdown inline-block w-10 text-center py-1 mx-auto text-xl mb-5 border rounded-full"
-      >
-        30
-      </div>
+    <div class="gameArea hidden mx-2 mt-10 p-4 sm:mx-auto sm:p-10 max-w-3xl flex flex-col min-h-96 border rounded-xl">
+      <div class="countdown inline-block w-10 text-center py-1 mx-auto text-xl mb-5 border rounded-full">30</div>
       <span class="quesCount"></span>
       <div class="questionText font-semibold text-xl"></div>
       <div class="options mt-8">
         <ul class="optinsUl flex flex-col text-lg">
-          <li
-            class="option outline rounded px-2 py-1 mb-3 hover:bg-gray-200 cursor-pointer"
-          >
-            option 1
-          </li>
-          <li
-            class="option outline rounded px-2 py-1 mb-3 hover:bg-gray-200 cursor-pointer"
-          >
-            option 2
-          </li>
-          <li
-            class="option outline rounded px-2 py-1 mb-3 hover:bg-gray-200 cursor-pointer"
-          >
-            option 3
-          </li>
-          <li
-            class="option outline rounded px-2 py-1 mb-2 hover:bg-gray-200 cursor-pointer"
-          >
-            option 4
-          </li>
+          <li class="option outline rounded px-2 py-1 mb-2 hover:bg-gray-200 cursor-pointer"></li>
+          <li class="option outline rounded px-2 py-1 mb-2 hover:bg-gray-200 cursor-pointer"></li>
+          <li class="option outline rounded px-2 py-1 mb-2 hover:bg-gray-200 cursor-pointer"></li>
+          <li class="option outline rounded px-2 py-1 mb-2 hover:bg-gray-200 cursor-pointer"></li>
         </ul>
       </div>
       <div class="mx-auto mt-10 max-w-2xl flex justify-center">
-        <button
-          class="nextQuestionBtn bg-gray-700 hover:bg-gray-600 px-10 py-2 rounded-xl text-white"
-        >
-          Next
-        </button>
+        <button class="nextQuestionBtn bg-gray-700 hover:bg-gray-600 px-10 py-2 rounded-xl text-white">Next</button>
       </div>
     </div>
-
-    <div
-      class="resultDiv hidden flex flex-col justify-center items-center max-w-2xl mx-auto"
-    >
+    <div class="resultDiv hidden flex flex-col justify-center items-center max-w-2xl mx-auto">
       <div class="mt-5 text-xl underline font-semibold">Result</div>
       <div class="mt-5">Right Ans : <span class="totalRight"></span></div>
-      <div class="mt-2">Wrong Ans : <span class="totalWrong"></span></div>
+      <div class="">Wrong Ans : <span class="totalWrong"></span></div>
+      --------------------------------------------------------------
+      <div class="showResult"></div>
+      <button class="restartGameBtn mt-5 mb-10 bg-gray-700 hover:bg-gray-600 px-10 py-2 rounded-xl text-white">Reset Game</button>
     </div>
-
     <script>
-      //consts
-      const startGameBtn = document.querySelector(".startGameBtn");
-      const startBtnArea = document.querySelector(".startBtnArea");
-      const countdown = document.querySelector(".countdown");
-      const gameArea = document.querySelector(".gameArea");
-      const quesCount = document.querySelector(".quesCount");
-      const nextQuestionBtn = document.querySelector(".nextQuestionBtn");
-      const questionText = document.querySelector(".questionText");
-      const optinsUl = document.querySelector(".optinsUl");
-      const totalRight = document.querySelector(".totalRight");
-      const totalWrong = document.querySelector(".totalWrong");
-      const resultDiv = document.querySelector(".resultDiv");
-      let isGameSarted = false;
-      let allQues;
-      let current_question = "";
-      let correct_option = "";
-      let selected_option = "";
-      let summary = [];
-      let summary_head = {
-        correct: 0,
-        inccorect: 0,
-        "not answered": 10,
-      };
-      const RESULT = [];
-      const countBegin = startTimer();
+const startGameBtn = document.querySelector(".startGameBtn");
+const startBtnArea = document.querySelector(".startBtnArea");
+const countdown = document.querySelector(".countdown");
+const gameArea = document.querySelector(".gameArea");
+const quesCount = document.querySelector(".quesCount");
+const nextQuestionBtn = document.querySelector(".nextQuestionBtn");
+const questionText = document.querySelector(".questionText");
+const optinsUl = document.querySelector(".optinsUl");
+const totalRight = document.querySelector(".totalRight");
+const totalWrong = document.querySelector(".totalWrong");
+const resultDiv = document.querySelector(".resultDiv");
+const restartGameBtn = document.querySelector(".restartGameBtn");
+const showResultDiv = document.querySelector(".showResult");
+let isGameSarted = false;
+let allQues;
+let current_question = "";
+let correct_option = "";
+let selected_option = "";
+let summary_head = {
+  correct: 0,
+  inccorect: 0,
+  "not answered": 10,
+};
+const RESULT = {
+  did_correct : [],
+  did_inccorrect : [],
+  not_answered : []
+}
+const countBegin = startTimer();
 
-      //eventlisteners
-      let logQues = startGameFn();
-      startGameBtn.addEventListener("click", async () => {
-        isGameSarted = true;
-        const gotQues = await getQuesFn();
-        console.log(gotQues);
-        if (gotQues) {
-          console.log("got", gotQues[0].question);
-          allQues = gotQues;
-          logQues();
-          startBtnArea.style.display = "none";
-          gameArea.style.display = "flex";
-        } else {
-          console.log("error while getting fn");
-        }
-      });
+//eventlisteners
+let logQues = startGameFn();
+startGameBtn.addEventListener("click", async () => {
+  isGameSarted = true;
+  const gotQues = await getQuesFn();
+  if (gotQues) {
+    allQues = gotQues;
+    logQues();
+    startBtnArea.style.display = "none";
+    gameArea.style.display = "flex";
+  }
+});
 
-      nextQuestionBtn.addEventListener("click", () => {
-        console.log("reset");
-        logQues();
-      });
+nextQuestionBtn.addEventListener("click", () => {
+  console.log("reset");
+  logQues();
+});
 
-      optinsUl.addEventListener("click", (e) => {
-        if (e.target.classList.contains("option")) {
-          //console.log("clicked optionsss");
-          const clicked = e.target.textContent.toString();
-          //console.log(`corr is ${correct_option} and clicked ${clicked}`);
-          if (clicked == correct_option) {
-            console.log("right answes");
-            summary_head.correct += 1;
-            summary_head["not answered"] -= 1;
-          } else {
-            summary_head.inccorect += 1;
-            console.log("wrong ans");
-          }
-          const obj = {
-            question: current_question,
-            correct_option,
-            selected_option,
-          };
-          summary.push(obj);
-          logQues();
-        }
-      });
-
-      //functions
-      async function getQuesFn() {
-        const response = await fetch(
-          "https://opentdb.com/api.php?amount=10&category=9&difficulty=medium&type=multiple"
-        );
-        const data = await response.json();
-        return data?.results;
-      }
-
-      //starting
-      function startGameFn() {
-        console.log(allQues, "aaaa");
-        let index = 0;
-        return function () {
-          countBegin();
-
-          if (allQues[index]?.question && index < 10) {
-            current_question = allQues[index].question;
-            quesCount.innerHTML = `Q. ${index + 1}`;
-            questionText.innerHTML = current_question;
-            correct_option = allQues[index].correct_answer;
-            const allOptions = [
-              allQues[index].correct_answer,
-              ...allQues[index].incorrect_answers,
-            ];
-            let clutter = "";
-            let optionLabel = 1;
-            allOptions.forEach((elem) => {
-              clutter += `<li
+optinsUl.addEventListener("click", (e) => {
+  if (e.target.classList.contains("option")) {
+    const clicked = e.target.textContent.toString();
+    if (clicked == correct_option) {
+      summary_head.correct += 1;
+      summary_head["not answered"] -= 1
+      RESULT.did_correct.push({
+        current_question,
+        selected_option : clicked,
+        correct_option
+      })
+    } else {
+      summary_head.inccorect += 1;
+      RESULT.did_inccorrect.push({
+        current_question,
+        selected_option :  clicked,
+        correct_option
+      })
+    }
+    logQues();
+  }
+});
+restartGameBtn?.addEventListener('click',()=>{
+   window.location.reload();
+})
+//functions
+async function getQuesFn() {
+  const response = await fetch(
+    "https://opentdb.com/api.php?amount=10&category=9&difficulty=medium&type=multiple"
+  );
+  const data = await response.json();
+  return data?.results;
+}
+//starting
+function startGameFn() {
+  let index = 0;
+  return function () {
+    countBegin();
+    if (allQues[index]?.question && index < 10) {
+      current_question = allQues[index].question;
+      quesCount.innerHTML = `Q. ${index + 1}`;
+      questionText.innerHTML = current_question;
+      correct_option = allQues[index].correct_answer;
+      const allOptions = shuffleOptions([
+        allQues[index].correct_answer,
+        ...allQues[index].incorrect_answers,
+      ]);
+      let clutter = "";
+      let optionLabel = 1;
+      allOptions.forEach((elem) => {
+        clutter += `<li
             class="option outline rounded px-2 py-1 mb-3 hover:bg-gray-200 cursor-pointer"
           >${elem}</li>`;
-              optionLabel++;
-            });
-            optinsUl.innerHTML = clutter;
-            index++;
-          } else {
-            console.log("all ques over");
-            showResult();
-          }
-        };
-      }
+        optionLabel++;
+      });
+      optinsUl.innerHTML = clutter;
+      index++;
+    } else {
+      showResult()
+    }
+  };
+}
 
-      function startTimer() {
-        let interval;
-        let count = 30;
-        return function () {
-          clearInterval(interval);
-          count = 30;
-          interval = setInterval(() => {
-            if (count > 0) {
-              count--;
-              countdown.innerHTML = count;
-            } else {
-              clearInterval(interval);
-              timesUpUserLoose();
-            }
-          }, 1000);
-        };
+function startTimer() {
+  let interval;
+  let count = 30;
+  return function () {
+    clearInterval(interval);
+    count = 30;
+    interval = setInterval(() => {
+      if (count > 0) {
+        count--;
+        countdown.innerHTML = count;
+      } else {
+        clearInterval(interval);
+        timesUpUserLoose();
       }
+    }, 1000);
+  };
+}
 
-      function timesUpUserLoose() {
-        console.log("game stoped");
-      }
-
-      function showResult() {
-        resultDiv.style.display = "block";
-        gameArea.style.display = "none";
-        console.log(`total correct ${summary_head.correct}`);
-        console.log(`incorect: ${summary_head.inccorect}`);
-        totalRight.innerHTML = summary_head.correct;
-        totalWrong.innerHTML = summary_head.inccorect;
-      }
+function shuffleOptions(arr){
+  for(let i = 0; i < arr.length; i++){
+    const any = Math.floor(Math.random()*arr.length);
+    [arr[i],arr[any]]=[arr[any],arr[i]]
+  }
+  return arr
+}
+function timesUpUserLoose() {}
+function showResult(){
+    resultDiv.style.display = "block";
+    gameArea.style.display = "none";
+    totalRight.innerHTML = summary_head.correct;
+    totalWrong.innerHTML = summary_head.inccorect;
+    let clutter = `<div class="mt-5 text-lg underline font-semibold">Did Right</div>`
+    RESULT.did_correct.forEach(elem => {
+      clutter += `<div class="ques mt-4">Q: ${elem.current_question}</div>
+                 <p>Selected Option: ${elem.selected_option} </p>
+                 <p>Correct Option: ${elem.correct_option} </p>`
+    })
+    clutter += `------------------------------------------------------------------`
+    clutter += `<div class="mt-10 text-lg underline font-semibold">Did Wrong</div>`
+    RESULT.did_inccorrect.forEach(elem => {
+      clutter += `<div class="ques mt-2">Q:${elem.current_question}</div>
+                 <p>Selected Option: ${elem.selected_option} </p>
+                 <p>Correct Option: ${elem.correct_option} </p>`
+    })
+    clutter += `------------------------------------------------------------------`
+    showResultDiv.innerHTML = clutter
+}
     </script>
   </body>
 </html>
