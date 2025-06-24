@@ -181,8 +181,7 @@ function showResult(){
     let clutter = `<div class="mt-5 text-lg underline font-semibold">Did Right</div>`
     RESULT.did_correct.forEach(elem => {
       clutter += `<div class="ques mt-4">Q: ${elem.current_question}</div>
-                 <p>Selected Option: ${elem.selected_option} </p>
-                 <p>Correct Option: ${elem.correct_option} </p>`
+                 <p>Selected & Correct Option: ${elem.selected_option} </p>`
     })
     clutter += `------------------------------------------------------------------`
     clutter += `<div class="mt-10 text-lg underline font-semibold">Did Wrong</div>`
